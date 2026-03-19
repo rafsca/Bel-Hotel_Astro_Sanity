@@ -1,3 +1,23 @@
+---
+import '@fontsource/poppins/400.css';
+import '@fontsource/poppins/500.css';
+import '@fontsource/poppins/600.css';
+import '@fontsource/poppins/700.css';
+import '@fontsource/poppins/800.css';
+import '@fontsource/poppins/900.css';
+import '../styles/global.css' 
+
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const { 
+	title = 'Welcome to Astro!', 
+	description = 'Astro is a modern static site generator.' 
+	} = Astro.props;
+---
+
 <!doctype html>
 <html lang="en">
 	<head>
@@ -6,7 +26,8 @@
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<meta name="description" content={description} />
+		<title>{title}</title>
 	</head>
 	<body>
 		<slot />
