@@ -1,0 +1,62 @@
+---
+import { Button } from "./ui/button";
+---
+
+<footer class="bg-secondary relative mt-20 pt-20 pb-8">
+    <div class="container">
+        <div class="md:grid md:grid-cols-2 md:gap-4 lg:mb-12 lg:grid-cols-3">
+
+            <!-- row 1 -->
+            <div class="mb-8 md:mb-0">
+                <h3 class="text-400 font-500 mb-4 capitalize">BEL Hotel</h3>
+
+                <p class="mb-4">
+                    Un BEL Hotel è un luogo dove il comfort e l'eleganza si fondono per offrire un'esperienza indimenticabile. 
+                    Con camere lussuose, servizi impeccabili e un'atmosfera accogliente, il BEL Hotel è la scelta ideale per chi cerca un soggiorno di classe e relax. 
+                    Che tu stia viaggiando per affari o per piacere, il BEL Hotel ti accoglie con stile e ospitalità senza pari.
+                </p>
+
+                <Button asChild className="font-600">
+                    <a href="/" class="hover:text-primary transition-colors duration-300 ease-in-out">Visit our website</a>
+                </Button>
+            </div>
+
+            <!-- row 2 -->
+            <div class="mb-8 md:mb-0 md:justify-self-center">
+                <h3 class="text-400 font-500 mb-4 capitalize">quick menu</h3>
+                
+                <li class="mb-2 list-none">
+                    <a href="/rooms" class="hover:text-primary transition-colors duration-300 ease-in-out">Rooms & Suites</a>
+                </li>
+                <li class="mb-2 list-none">
+                    <a href="/about" class="hover:text-primary transition-colors duration-300 ease-in-out">About Us</a>
+                </li>
+                <li class="mb-2 list-none">
+                    <a href="/contact" class="hover:text-primary transition-colors duration-300 ease-in-out">Contact</a>
+                </li>
+             
+        </div>
+
+         <!-- row 3 -->
+        <div class="mb-8 md:mb-0 lg:justify-self-center">
+                <h3 class="text-400 font-500 mb-4 capitalize">other links</h3>
+                
+                <li class="mb-2 list-none">
+                    <a href="/" class="hover:text-primary transition-colors duration-300 ease-in-out">Home</a>
+                </li>
+                <li class="mb-2 list-none">
+                    <a href="/rooms" class="hover:text-primary transition-colors duration-300 ease-in-out">Book a Room</a>
+                </li>
+                <li class="mb-2 list-none">
+                    <a href="/contact" class="hover:text-primary transition-colors duration-300 ease-in-out">Support</a>
+                </li>
+             
+        </div>
+    </div>
+
+    <div class="pt-12 text-center">
+            <p class="text-400 text-sm">
+                &copy; {new Date().getFullYear()} BEL Hotel. All rights reserved.
+            </p>
+    </div>
+</footer>

@@ -1,0 +1,37 @@
+---
+import HeroImage from '../assets/Gemini_Generated_Image_em2537em2537em25.png';
+import { Image } from 'astro:assets';
+import { Button } from '../components/ui/button';
+
+interface Props {
+    title?: string;
+    subtitle?: string;
+    ctaLabel?: string;
+    ctaHref?: string;
+}
+
+const {
+    title = 'Welcome to BEL Hotel',
+    subtitle = 'Experience the epitome of luxury and comfort at BEL Hotel, where every stay is a memorable one.',
+    ctaLabel = 'Book Now',
+    ctaHref = '/rooms',
+} = Astro.props;
+---
+
+<section>
+    <div class="relative z-40">
+        <Image src={HeroImage} alt="Hotel Background" class="absolute inset-0 -z-20 h-full w-full object-cover" />
+        <div class="absolute inset-0 -z-10 bg-black/65"></div>
+
+        <div class="container flex min-h-screen flex-col items-start justify-center">
+            <div class="z-40 mx-auto max-w-[600px] text-center">
+                <h1 class="mb-3 text-4xl leading-tight font-black text-white md:text-5xl lg:text-7xl">{title}</h1>
+                <p class="mb-6 text-base text-white/90 md:text-xl">{subtitle}</p>
+                    <Button asChild className="font-600 md:text-100">
+                        <a href={ctaHref}>{ctaLabel}</a>
+                    </Button>
+            </div>
+        </div>
+
+    </div>
+</section>

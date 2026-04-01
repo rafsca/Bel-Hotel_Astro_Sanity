@@ -1,0 +1,123 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { Image } from 'astro:assets';
+import Room1 from '@/assets/hotel_room1.jpeg';
+import Room2 from '@/assets/hotel_room2.jpeg';
+import Room3 from '@/assets/hotel_room3.jpeg';
+import Room4 from '@/assets/hotel_room4.jpeg';
+import { Button } from '@/components/ui/button';
+import { getRooms, isSanityConfigured, urlFor } from '@/lib/cms';
+
+const sanityRooms = await getRooms(12);
+
+const fallbackRooms = [
+  {
+    title: 'Royal Room',
+    excerpt: 'Suite premium con vista panoramica, letto king-size e area relax dedicata.',
+    price: 299,
+    capacity: 2,
+    asset: Room1,
+  },
+  {
+    title: 'Deluxe Room',
+    excerpt: 'Perfetto equilibrio tra eleganza e funzionalità con servizi di alto livello.',
+    price: 249,
+    capacity: 2,
+    asset: Room2,
+  },
+  {
+    title: 'Executive Suite',
+    excerpt: 'Spazi ampi per soggiorni business o leisure con comfort superiore.',
+    price: 359,
+    capacity: 3,
+    asset: Room3,
+  },
+  {
+    title: 'Family Room',
+    excerpt: 'Ideale per famiglie, con ambienti versatili e servizi su misura.',
+    price: 319,
+    capacity: 4,
+    asset: Room4,
+  },
+];
+
+const fallbackRoomImages = [Room1, Room2, Room3, Room4];
+---
+
+<Layout title="Camere | BEL Hotel" description="Scopri le camere e suite BEL Hotel.">
+  <section class="pt-32 pb-16">
+    <div class="container">
+      <p class="text-primary mb-2 text-sm font-semibold tracking-wider uppercase">Rooms & Suites</p>
+      <h1 class="mb-4 text-4xl font-black md:text-5xl">Scegli la camera perfetta</h1>
+      <p class="text-muted-foreground max-w-2xl">
+        Ogni soluzione è progettata per offrirti un soggiorno confortevole, con un design elegante e servizi premium.
+      </p>
+    </div>
+  </section>
+
+  <section class="pb-20">
+    <div class="container">
+      {sanityRooms.length > 0 ? (
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {sanityRooms.map((room, index) => (
+            <article class="bg-card overflow-hidden rounded-2xl border shadow-sm">
+              {room.image && urlFor(room.image)?.width(900).height(560).url() ? (
+                <img
+                  src={urlFor(room.image)?.width(900).height(560).url()}
+                  alt={room.imageAlt ?? room.title}
+                  class="h-56 w-full object-cover"
+                  loading="lazy"
+                />
+              ) : (
+                <Image
+                  src={fallbackRoomImages[index % fallbackRoomImages.length]}
+                  alt={room.title}
+                  class="h-56 w-full object-cover"
+                />
+              )}
+
+              <div class="p-5">
+                <h2 class="mb-2 text-2xl font-semibold">{room.title}</h2>
+                <p class="text-muted-foreground mb-4">{room.excerpt ?? 'Dettagli disponibili su richiesta.'}</p>
+
+                <div class="mb-4 flex items-center justify-between text-sm">
+                  <span>Capienza: {room.capacity ?? 2} ospiti</span>
+                  <span class="text-primary font-semibold">{room.price ? `Da €${room.price}/notte` : 'Prezzo su richiesta'}</span>
+                </div>
+
+                <Button asChild className="w-full">
+                  <a href="/contact">Richiedi disponibilità</a>
+                </Button>
+              </div>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {fallbackRooms.map((room) => (
+            <article class="bg-card overflow-hidden rounded-2xl border shadow-sm">
+              <Image src={room.asset} alt={room.title} class="h-56 w-full object-cover" />
+              <div class="p-5">
+                <h2 class="mb-2 text-2xl font-semibold">{room.title}</h2>
+                <p class="text-muted-foreground mb-4">{room.excerpt}</p>
+                <div class="mb-4 flex items-center justify-between text-sm">
+                  <span>Capienza: {room.capacity} ospiti</span>
+                  <span class="text-primary font-semibold">Da €{room.price}/notte</span>
+                </div>
+                <Button asChild className="w-full">
+                  <a href="/contact">Richiedi disponibilità</a>
+                </Button>
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
+
+      {!isSanityConfigured && (
+        <p class="text-muted-foreground mt-6 text-sm">
+          Per usare i contenuti reali da CMS configura le variabili Sanity nel progetto.
+        </p>
+      )}
+    </div>
+  </section>
+</Layout>
