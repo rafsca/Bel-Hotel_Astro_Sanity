@@ -1,11 +1,136 @@
 ---
-import Welcome from '../components/Welcome.astro';
+import Hero from '@/sections/Hero.astro';
 import Layout from '../layouts/Layout.astro';
+import { Button } from '@/components/ui/button';
+import { Image } from 'astro:assets';
+import Room1 from '@/assets/hotel_room1.jpeg';
+import Room2 from '@/assets/hotel_room2.jpeg';
+import Room3 from '@/assets/hotel_room3.jpeg';
+import { getHomepageContent, getRooms, getSiteSettings, isSanityConfigured, urlFor } from '@/lib/cms';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const [settings, homepage, sanityRooms] = await Promise.all([
+	getSiteSettings(),
+	getHomepageContent(),
+	getRooms(3),
+]);
+
+const fallbackRooms = [
+	{
+		title: 'Royal Room',
+		excerpt: 'Suite elegante con vista panoramica, letto king-size e servizio premium 24/7.',
+		price: 299,
+		asset: Room1,
+	},
+	{
+		title: 'Comfort Room',
+		excerpt: 'Perfetta per city break e soggiorni business, con design moderno e ambiente rilassante.',
+		price: 189,
+		asset: Room2,
+	},
+	{
+		title: 'Serene Room',
+		excerpt: 'Atmosfera tranquilla, luce naturale e dettagli curati per il massimo del relax.',
+		price: 219,
+		asset: Room3,
+	},
+];
+
+const fallbackRoomImages = [Room1, Room2, Room3];
 ---
 
-<Layout>
-	<Welcome />
+<Layout title={settings?.title ?? 'BEL Hotel'} description={settings?.description ?? 'Luxury & Comfort, Every Stay'}>
+	<!-- Hero Section -->
+	<Hero
+		title={homepage?.heroTitle ?? 'Welcome to BEL Hotel'}
+		subtitle={homepage?.heroSubtitle ?? 'Experience the epitome of luxury and comfort at BEL Hotel, where every stay is a memorable one.'}
+		ctaLabel={homepage?.heroCtaLabel ?? 'Scopri le camere'}
+		ctaHref={homepage?.heroCtaHref ?? '/rooms'}
+	/>
+
+	<section class="py-20">
+		<div class="container">
+			<div class="mb-10 text-center">
+				<p class="text-primary mb-2 text-sm font-semibold tracking-wider uppercase">BEL Experience</p>
+				<h2 class="text-3xl font-bold md:text-4xl">Un soggiorno pensato per farti stare bene</h2>
+			</div>
+
+			<div class="grid gap-5 md:grid-cols-3">
+				<article class="bg-card rounded-2xl border p-6 shadow-sm">
+					<h3 class="mb-2 text-xl font-semibold">Camere Premium</h3>
+					<p class="text-muted-foreground">Spazi raffinati con materiali di qualità, comfort acustico e design contemporaneo.</p>
+				</article>
+				<article class="bg-card rounded-2xl border p-6 shadow-sm">
+					<h3 class="mb-2 text-xl font-semibold">Ristorante Interno</h3>
+					<p class="text-muted-foreground">Cucina locale e internazionale, ingredienti stagionali e servizio attento ai dettagli.</p>
+				</article>
+				<article class="bg-card rounded-2xl border p-6 shadow-sm">
+					<h3 class="mb-2 text-xl font-semibold">Wellness & Relax</h3>
+					<p class="text-muted-foreground">Aree dedicate al benessere per rigenerarti dopo una giornata intensa o un viaggio lungo.</p>
+				</article>
+			</div>
+		</div>
+	</section>
+
+	<section class="bg-secondary/40 py-20">
+		<div class="container">
+			<div class="mb-10 flex flex-wrap items-end justify-between gap-4">
+				<div>
+					<p class="text-primary mb-2 text-sm font-semibold tracking-wider uppercase">Camere in evidenza</p>
+					<h2 class="text-3xl font-bold md:text-4xl">Le nostre migliori soluzioni</h2>
+				</div>
+				<Button asChild className="font-600">
+					<a href="/rooms">Vedi tutte le camere</a>
+				</Button>
+			</div>
+
+			{sanityRooms.length > 0 ? (
+				<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+					{sanityRooms.map((room, index) => (
+						<article class="bg-card overflow-hidden rounded-2xl border shadow-sm">
+							{room.image && urlFor(room.image)?.width(800).height(500).url() ? (
+								<img
+									src={urlFor(room.image)?.width(800).height(500).url()}
+									alt={room.imageAlt ?? room.title}
+									class="h-56 w-full object-cover"
+									loading="lazy"
+								/>
+							) : (
+								<Image
+									src={fallbackRoomImages[index % fallbackRoomImages.length]}
+									alt={room.title}
+									class="h-56 w-full object-cover"
+								/>
+							)}
+							<div class="p-5">
+								<h3 class="mb-2 text-xl font-semibold">{room.title}</h3>
+								<p class="text-muted-foreground mb-4 line-clamp-3">{room.excerpt ?? 'Dettagli disponibili in struttura.'}</p>
+								<div class="text-primary font-semibold">
+									{room.price ? `Da €${room.price}/notte` : 'Prezzo su richiesta'}
+								</div>
+							</div>
+						</article>
+					))}
+				</div>
+			) : (
+				<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+					{fallbackRooms.map((room) => (
+						<article class="bg-card overflow-hidden rounded-2xl border shadow-sm">
+							<Image src={room.asset} alt={room.title} class="h-56 w-full object-cover" />
+							<div class="p-5">
+								<h3 class="mb-2 text-xl font-semibold">{room.title}</h3>
+								<p class="text-muted-foreground mb-4">{room.excerpt}</p>
+								<div class="text-primary font-semibold">Da €{room.price}/notte</div>
+							</div>
+						</article>
+					))}
+				</div>
+			)}
+
+			{!isSanityConfigured && (
+				<p class="text-muted-foreground mt-6 text-sm">
+					Sanity non è ancora configurato: al momento stai vedendo contenuti demo locali.
+				</p>
+			)}
+		</div>
+	</section>
 </Layout>
