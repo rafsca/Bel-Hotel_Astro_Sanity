@@ -43,7 +43,7 @@ const client = isSanityConfigured
       projectId,
       dataset,
       apiVersion,
-      useCdn: import.meta.env.PROD,
+      useCdn: false,
       token,
       perspective: token ? 'drafts' : 'published',
     })
