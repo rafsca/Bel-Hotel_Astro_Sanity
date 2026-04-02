@@ -8,6 +8,7 @@ import '@fontsource/poppins/900.css';
 import '../styles/global.css' 
 import Header from '../components/Header';
 import Footer from '@/components/Footer.astro';
+import { getNavigationSettings } from '@/lib/cms';
 
 interface Props {
 	title?: string;
@@ -18,6 +19,8 @@ const {
 	title = 'BEL Hotel', 
 	description = 'Luxury & Comfort, Every Stay.' 
 	} = Astro.props;
+
+const navigationSettings = await getNavigationSettings();
 ---
 <script is:inline>
 	const getThemePreference = () => {
@@ -50,7 +53,7 @@ const {
 		<title>{title}</title>
 	</head>
 	<body class="font-poppins">
-		<Header client:load />
+		<Header client:load navigation={navigationSettings} />
 		<slot />
 		<Footer />
 	</body>

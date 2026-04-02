@@ -6,9 +6,9 @@ import Room2 from '@/assets/hotel_room2.jpeg';
 import Room3 from '@/assets/hotel_room3.jpeg';
 import Room4 from '@/assets/hotel_room4.jpeg';
 import { Button } from '@/components/ui/button';
-import { getRooms, isSanityConfigured, urlFor } from '@/lib/cms';
+import { getRooms, getRoomsPageContent, isSanityConfigured, urlFor } from '@/lib/cms';
 
-const sanityRooms = await getRooms(12);
+const [sanityRooms, roomsPage] = await Promise.all([getRooms(12), getRoomsPageContent()]);
 
 const fallbackRooms = [
   {
@@ -44,13 +44,13 @@ const fallbackRooms = [
 const fallbackRoomImages = [Room1, Room2, Room3, Room4];
 ---
 
-<Layout title="Camere | BEL Hotel" description="Scopri le camere e suite BEL Hotel.">
+<Layout title={roomsPage?.title ?? 'Camere | BEL Hotel'} description={roomsPage?.description ?? 'Scopri le camere e suite BEL Hotel.'}>
   <section class="pt-32 pb-16">
     <div class="container">
-      <p class="text-primary mb-2 text-sm font-semibold tracking-wider uppercase">Rooms & Suites</p>
-      <h1 class="mb-4 text-4xl font-black md:text-5xl">Scegli la camera perfetta</h1>
+      <p class="text-primary mb-2 text-sm font-semibold tracking-wider uppercase">{roomsPage?.heroEyebrow ?? 'Rooms & Suites'}</p>
+      <h1 class="mb-4 text-4xl font-black md:text-5xl">{roomsPage?.heroTitle ?? 'Scegli la camera perfetta'}</h1>
       <p class="text-muted-foreground max-w-2xl">
-        Ogni soluzione è progettata per offrirti un soggiorno confortevole, con un design elegante e servizi premium.
+        {roomsPage?.heroDescription ?? 'Ogni soluzione è progettata per offrirti un soggiorno confortevole, con un design elegante e servizi premium.'}
       </p>
     </div>
   </section>

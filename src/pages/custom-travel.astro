@@ -1,0 +1,219 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { Button } from '@/components/ui/button';
+import HeroImage from '@/assets/Gemini_Generated_Image_em2537em2537em25.png';
+import CardImageOne from '@/assets/hotel_room1.jpeg';
+import CardImageTwo from '@/assets/dining.jpeg';
+import CardImageThree from '@/assets/hotel_room3.jpeg';
+import {
+  getCustomTravelPageContent,
+  isSanityConfigured,
+  urlFor,
+  type CustomTravelPageSection,
+  type FeatureRowsSection,
+  type StepsSection,
+} from '@/lib/cms';
+
+const fallbackFeatureImages = [CardImageOne.src, CardImageTwo.src, CardImageThree.src];
+
+const fallbackSections: CustomTravelPageSection[] = [
+  {
+    _type: 'pageIntroSection',
+    eyebrow: 'Custom Travel',
+    title: 'Viaggi progettati su misura',
+    subtitle: 'Disegniamo itinerari personalizzati con la stessa cura con cui accogliamo i nostri ospiti: attenzione ai dettagli, qualità e stile.',
+    showBreadcrumb: true,
+    breadcrumbLabel: 'custom travel',
+  },
+  {
+    _type: 'splitContentSection',
+    eyebrow: 'Tailor-made',
+    title: 'Il tuo viaggio, con il tuo ritmo',
+    content:
+      "Ogni persona ha esigenze diverse: c'è chi cerca cultura, chi relax, chi una combinazione perfetta tra scoperta e benessere. Per questo non proponiamo pacchetti standard, ma percorsi costruiti intorno a te.",
+    quote: "Un itinerario ben progettato non è solo una lista di tappe: è un'esperienza coerente, fluida e memorabile.",
+  },
+  {
+    _type: 'stepsSection',
+    title: 'Come lavoriamo',
+    ctaLabel: 'Richiedi una consulenza',
+    ctaHref: '/contact',
+    items: [
+      {
+        title: 'ASCOLTO',
+        description:
+          'Partiamo da una call conoscitiva: capiamo stile di viaggio, ritmi, priorità e aspettative per costruire un itinerario davvero personale.',
+      },
+      {
+        title: 'PROGETTAZIONE',
+        description:
+          'Definiamo una proposta su misura con tappe, attività e servizi selezionati. Ogni scelta è pensata per equilibrio tra comfort, scoperta e tempo libero.',
+      },
+      {
+        title: 'CONFERMA',
+        description:
+          'Finalizziamo i dettagli operativi e ti consegniamo un piano chiaro, pronto da vivere, con supporto dedicato prima e durante il viaggio.',
+      },
+    ],
+  },
+  {
+    _type: 'featureRowsSection',
+    title: 'Perché scegliere il nostro custom travel',
+    items: [
+      {
+        title: 'Esperienze autentiche',
+        description:
+          'Percorsi costruiti con partner locali affidabili, per vivere luoghi, sapori e tradizioni con uno sguardo vero e contemporaneo.',
+      },
+      {
+        title: 'Accessi e servizi premium',
+        description:
+          'Prenotazioni ottimizzate, timing intelligenti e servizi di livello per ridurre attriti e valorizzare ogni giornata del viaggio.',
+      },
+      {
+        title: 'Consulenza continua',
+        description:
+          'Un riferimento unico per tutta la durata del percorso: dalla prima idea alla partenza, fino al rientro.',
+      },
+    ],
+  },
+];
+
+const cmsPage = await getCustomTravelPageContent();
+const sections = cmsPage?.sections?.length ? cmsPage.sections : fallbackSections;
+const heroHeightVh = Math.min(100, Math.max(20, cmsPage?.heroHeightVh ?? 60));
+const heroImageUrl = cmsPage?.heroImage
+  ? urlFor(cmsPage.heroImage)?.width(2200).height(1400).url() ?? HeroImage.src
+  : HeroImage.src;
+const heroAlt = cmsPage?.heroImageAlt ?? 'Custom Travel BEL Hotel';
+const pageTitle = cmsPage?.seoTitle ?? 'Custom Travel | BEL Hotel';
+const pageDescription = cmsPage?.seoDescription ?? 'Viaggi personalizzati firmati BEL Hotel.';
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <section
+    class="overflow-hidden bg-center bg-cover bg-no-repeat"
+    style={`height: ${heroHeightVh}vh; background-image: url(${heroImageUrl}); background-position: center center;`}
+    aria-label={heroAlt}
+  ></section>
+
+  {sections.map((section) => {
+    if (section._type === 'pageIntroSection') {
+      return (
+        <section class="py-16">
+          <div class="container">
+            <div class="mb-10 max-w-3xl">
+              {section.eyebrow && (
+                <p class="mb-3 text-sm font-semibold tracking-[0.2em] uppercase text-primary">{section.eyebrow}</p>
+              )}
+              {section.title && <h1 class="mb-4 text-4xl font-black leading-tight md:text-6xl">{section.title}</h1>}
+              {section.subtitle && <p class="text-muted-foreground md:text-lg">{section.subtitle}</p>}
+            </div>
+
+            {section.showBreadcrumb !== false && (
+              <div class="mb-8 text-sm text-muted-foreground">
+                <a href="/" class="hover:text-primary transition-colors duration-300">home</a>
+                <span class="mx-2">-</span>
+                <span class="text-foreground">{section.breadcrumbLabel ?? 'custom travel'}</span>
+              </div>
+            )}
+          </div>
+        </section>
+      );
+    }
+
+    if (section._type === 'splitContentSection') {
+      return (
+        <section class="pb-16">
+          <div class="container">
+            <div class="grid gap-10 lg:grid-cols-[1fr_1.2fr]">
+              <div>
+                {section.eyebrow && <p class="text-primary mb-2 text-sm font-semibold tracking-wider uppercase">{section.eyebrow}</p>}
+                {section.title && <h2 class="text-3xl font-black leading-tight md:text-4xl">{section.title}</h2>}
+              </div>
+
+              <div>
+                {section.content && <p class="text-muted-foreground mb-5">{section.content}</p>}
+                {section.quote && <p class="text-muted-foreground italic">"{section.quote}"</p>}
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    if (section._type === 'stepsSection') {
+      const safeSection = section as StepsSection;
+      const items = safeSection.items ?? [];
+
+      return (
+        <section class="bg-secondary/40 py-10">
+          <div class="container">
+            <div class="mb-8 flex items-end justify-between gap-4">
+              <h2 class="text-3xl font-black md:text-4xl">{safeSection.title ?? 'Come lavoriamo'}</h2>
+              {safeSection.ctaLabel && safeSection.ctaHref && (
+                <Button asChild className="font-600">
+                  <a href={safeSection.ctaHref}>{safeSection.ctaLabel}</a>
+                </Button>
+              )}
+            </div>
+
+            {items.length > 0 && (
+              <div class="grid gap-5 md:grid-cols-3">
+                {items.map((step) => (
+                  <article class="bg-card rounded-2xl border p-6 shadow-sm">
+                    {step.title && <h3 class="mb-3 text-xl font-semibold tracking-wide">{step.title}</h3>}
+                    {step.description && <p class="text-muted-foreground">{step.description}</p>}
+                  </article>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      );
+    }
+
+    if (section._type === 'featureRowsSection') {
+      const safeSection = section as FeatureRowsSection;
+      const items = safeSection.items ?? [];
+
+      return (
+        <section class="py-16">
+          <div class="container">
+            <h2 class="mb-8 text-3xl font-black md:text-4xl">{safeSection.title ?? 'Highlights'}</h2>
+
+            {items.length > 0 && (
+              <div class="grid gap-6">
+                {items.map((item, idx) => {
+                  const imageUrl = item.image
+                    ? urlFor(item.image)?.width(1200).height(800).url() ?? fallbackFeatureImages[idx % fallbackFeatureImages.length]
+                    : fallbackFeatureImages[idx % fallbackFeatureImages.length];
+
+                  return (
+                    <article class="bg-card overflow-hidden rounded-2xl border shadow-sm lg:grid lg:grid-cols-2">
+                      <div class="p-6 md:p-8">
+                        {item.title && <h3 class="mb-3 text-2xl font-semibold">{item.title}</h3>}
+                        {item.description && <p class="text-muted-foreground">{item.description}</p>}
+                      </div>
+                      <img src={imageUrl} alt={item.imageAlt ?? item.title ?? 'Feature image'} class="h-72 w-full object-cover" loading="lazy" />
+                    </article>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </section>
+      );
+    }
+
+    return null;
+  })}
+
+  {!isSanityConfigured && (
+    <section class="pb-16">
+      <div class="container">
+        <p class="text-muted-foreground text-sm">Sanity non è configurato: stai vedendo il fallback locale della pagina.</p>
+      </div>
+    </section>
+  )}
+</Layout>

@@ -4,6 +4,13 @@ export const siteSettingsType = defineType({
   name: 'siteSettings',
   title: 'Site Settings',
   type: 'document',
+  initialValue: {
+    title: 'BEL Hotel',
+    tagline: 'Luxury & Comfort, Every Stay',
+    description: 'Esperienza di lusso e comfort nel cuore della città.',
+    phone: '+39 0922 612570',
+    email: 'info@essenceofsicily.com',
+  },
   fields: [
     defineField({
       name: 'title',

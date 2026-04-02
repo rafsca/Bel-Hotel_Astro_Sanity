@@ -2,19 +2,21 @@
 import Layout from '@/layouts/Layout.astro';
 import { Image } from 'astro:assets';
 import HotelDining from '@/assets/dining.jpeg';
-import { getSiteSettings } from '@/lib/cms';
+import { getAboutPageContent, getSiteSettings, urlFor } from '@/lib/cms';
 
-const settings = await getSiteSettings();
+const [settings, aboutPage] = await Promise.all([getSiteSettings(), getAboutPageContent()]);
+
+const aboutImageUrl = aboutPage?.heroImage ? urlFor(aboutPage.heroImage)?.width(1200).height(900).url() : null;
 ---
 
-<Layout title="About | BEL Hotel" description="Scopri la storia e i valori BEL Hotel.">
+<Layout title={aboutPage?.title ?? 'About | BEL Hotel'} description={aboutPage?.description ?? 'Scopri la storia e i valori BEL Hotel.'}>
   <section class="pt-32 pb-16">
     <div class="container grid items-center gap-10 lg:grid-cols-2">
       <div>
-        <p class="text-primary mb-2 text-sm font-semibold tracking-wider uppercase">About BEL Hotel</p>
-        <h1 class="mb-4 text-4xl font-black md:text-5xl">Ospitalità contemporanea, anima italiana</h1>
+        <p class="text-primary mb-2 text-sm font-semibold tracking-wider uppercase">{aboutPage?.heroEyebrow ?? 'About BEL Hotel'}</p>
+        <h1 class="mb-4 text-4xl font-black md:text-5xl">{aboutPage?.heroTitle ?? 'Ospitalità contemporanea, anima italiana'}</h1>
         <p class="text-muted-foreground mb-4">
-          BEL Hotel nasce con una missione chiara: offrire esperienze autentiche, comfort di livello e un servizio che faccia sentire ogni ospite davvero al centro.
+          {aboutPage?.heroDescription ?? 'BEL Hotel nasce con una missione chiara: offrire esperienze autentiche, comfort di livello e un servizio che faccia sentire ogni ospite davvero al centro.'}
         </p>
         <p class="text-muted-foreground">
           {settings?.description ?? 'Dalla qualità del riposo alla cura della ristorazione, ogni dettaglio è pensato per rendere il tuo soggiorno memorabile.'}
@@ -22,7 +24,11 @@ const settings = await getSiteSettings();
       </div>
 
       <div class="overflow-hidden rounded-2xl border shadow-sm">
-        <Image src={HotelDining} alt="Ristorante interno BEL Hotel" class="h-full w-full object-cover" />
+        {aboutImageUrl ? (
+          <img src={aboutImageUrl} alt={aboutPage?.heroImageAlt ?? 'Ristorante interno BEL Hotel'} class="h-full w-full object-cover" loading="lazy" />
+        ) : (
+          <Image src={HotelDining} alt="Ristorante interno BEL Hotel" class="h-full w-full object-cover" />
+        )}
       </div>
     </div>
   </section>
@@ -31,18 +37,18 @@ const settings = await getSiteSettings();
     <div class="container">
       <div class="grid gap-5 md:grid-cols-3">
         <article class="bg-card rounded-2xl border p-6 shadow-sm">
-          <h2 class="mb-2 text-xl font-semibold">Visione</h2>
-          <p class="text-muted-foreground">Creare un nuovo standard di ospitalità urbana, elegante ma accessibile.</p>
+          <h2 class="mb-2 text-xl font-semibold">{aboutPage?.visionTitle ?? 'Visione'}</h2>
+          <p class="text-muted-foreground">{aboutPage?.visionDescription ?? 'Creare un nuovo standard di ospitalità urbana, elegante ma accessibile.'}</p>
         </article>
 
         <article class="bg-card rounded-2xl border p-6 shadow-sm">
-          <h2 class="mb-2 text-xl font-semibold">Servizio</h2>
-          <p class="text-muted-foreground">Team preparato, attento e sempre disponibile, 24 ore su 24.</p>
+          <h2 class="mb-2 text-xl font-semibold">{aboutPage?.serviceTitle ?? 'Servizio'}</h2>
+          <p class="text-muted-foreground">{aboutPage?.serviceDescription ?? 'Team preparato, attento e sempre disponibile, 24 ore su 24.'}</p>
         </article>
 
         <article class="bg-card rounded-2xl border p-6 shadow-sm">
-          <h2 class="mb-2 text-xl font-semibold">Qualità</h2>
-          <p class="text-muted-foreground">Materiali premium, ambienti curati e attenzione costante ai dettagli.</p>
+          <h2 class="mb-2 text-xl font-semibold">{aboutPage?.qualityTitle ?? 'Qualità'}</h2>
+          <p class="text-muted-foreground">{aboutPage?.qualityDescription ?? 'Materiali premium, ambienti curati e attenzione costante ai dettagli.'}</p>
         </article>
       </div>
     </div>

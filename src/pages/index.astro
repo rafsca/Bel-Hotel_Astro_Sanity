@@ -36,6 +36,23 @@ const fallbackRooms = [
 ];
 
 const fallbackRoomImages = [Room1, Room2, Room3];
+
+const fallbackExperienceCards = [
+	{
+		title: 'Camere Premium',
+		description: 'Spazi raffinati con materiali di qualità, comfort acustico e design contemporaneo.',
+	},
+	{
+		title: 'Ristorante Interno',
+		description: 'Cucina locale e internazionale, ingredienti stagionali e servizio attento ai dettagli.',
+	},
+	{
+		title: 'Wellness & Relax',
+		description: 'Aree dedicate al benessere per rigenerarti dopo una giornata intensa o un viaggio lungo.',
+	},
+];
+
+const experienceCards = homepage?.experienceCards?.length ? homepage.experienceCards : fallbackExperienceCards;
 ---
 
 <Layout title={settings?.title ?? 'BEL Hotel'} description={settings?.description ?? 'Luxury & Comfort, Every Stay'}>
@@ -51,22 +68,16 @@ const fallbackRoomImages = [Room1, Room2, Room3];
 		<div class="container">
 			<div class="mb-10 text-center">
 				<p class="text-primary mb-2 text-sm font-semibold tracking-wider uppercase">BEL Experience</p>
-				<h2 class="text-3xl font-bold md:text-4xl">Un soggiorno pensato per farti stare bene</h2>
+				<h2 class="text-3xl font-bold md:text-4xl">{homepage?.experienceSectionTitle ?? 'Un soggiorno pensato per farti stare bene'}</h2>
 			</div>
 
 			<div class="grid gap-5 md:grid-cols-3">
-				<article class="bg-card rounded-2xl border p-6 shadow-sm">
-					<h3 class="mb-2 text-xl font-semibold">Camere Premium</h3>
-					<p class="text-muted-foreground">Spazi raffinati con materiali di qualità, comfort acustico e design contemporaneo.</p>
-				</article>
-				<article class="bg-card rounded-2xl border p-6 shadow-sm">
-					<h3 class="mb-2 text-xl font-semibold">Ristorante Interno</h3>
-					<p class="text-muted-foreground">Cucina locale e internazionale, ingredienti stagionali e servizio attento ai dettagli.</p>
-				</article>
-				<article class="bg-card rounded-2xl border p-6 shadow-sm">
-					<h3 class="mb-2 text-xl font-semibold">Wellness & Relax</h3>
-					<p class="text-muted-foreground">Aree dedicate al benessere per rigenerarti dopo una giornata intensa o un viaggio lungo.</p>
-				</article>
+				{experienceCards.map((card) => (
+					<article class="bg-card rounded-2xl border p-6 shadow-sm">
+						<h3 class="mb-2 text-xl font-semibold">{card.title ?? 'Card'}</h3>
+						<p class="text-muted-foreground">{card.description ?? ''}</p>
+					</article>
+				))}
 			</div>
 		</div>
 	</section>
@@ -76,10 +87,10 @@ const fallbackRoomImages = [Room1, Room2, Room3];
 			<div class="mb-10 flex flex-wrap items-end justify-between gap-4">
 				<div>
 					<p class="text-primary mb-2 text-sm font-semibold tracking-wider uppercase">Camere in evidenza</p>
-					<h2 class="text-3xl font-bold md:text-4xl">Le nostre migliori soluzioni</h2>
+					<h2 class="text-3xl font-bold md:text-4xl">{homepage?.featuredRoomsTitle ?? 'Le nostre migliori soluzioni'}</h2>
 				</div>
 				<Button asChild className="font-600">
-					<a href="/rooms">Vedi tutte le camere</a>
+					<a href={homepage?.featuredRoomsCtaHref ?? '/rooms'}>{homepage?.featuredRoomsCtaLabel ?? 'Vedi tutte le camere'}</a>
 				</Button>
 			</div>
 

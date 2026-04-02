@@ -1,18 +1,18 @@
 ---
 import Layout from '@/layouts/Layout.astro';
 import { Button } from '@/components/ui/button';
-import { getSiteSettings } from '@/lib/cms';
+import { getContactPageContent, getSiteSettings } from '@/lib/cms';
 
-const settings = await getSiteSettings();
+const [settings, contactPage] = await Promise.all([getSiteSettings(), getContactPageContent()]);
 ---
 
-<Layout title="Contact | BEL Hotel" description="Contatta BEL Hotel per prenotazioni e informazioni.">
+<Layout title={contactPage?.title ?? 'Contact | BEL Hotel'} description={contactPage?.description ?? 'Contatta BEL Hotel per prenotazioni e informazioni.'}>
   <section class="pt-32 pb-16">
     <div class="container">
-      <p class="text-primary mb-2 text-sm font-semibold tracking-wider uppercase">Contatti</p>
-      <h1 class="mb-4 text-4xl font-black md:text-5xl">Parliamo del tuo prossimo soggiorno</h1>
+      <p class="text-primary mb-2 text-sm font-semibold tracking-wider uppercase">{contactPage?.heroEyebrow ?? 'Contatti'}</p>
+      <h1 class="mb-4 text-4xl font-black md:text-5xl">{contactPage?.heroTitle ?? 'Parliamo del tuo prossimo soggiorno'}</h1>
       <p class="text-muted-foreground max-w-2xl">
-        Scrivici per prenotazioni, richieste speciali o informazioni sulle camere.
+        {contactPage?.heroDescription ?? 'Scrivici per prenotazioni, richieste speciali o informazioni sulle camere.'}
       </p>
     </div>
   </section>
@@ -20,7 +20,7 @@ const settings = await getSiteSettings();
   <section class="pb-20">
     <div class="container grid gap-8 lg:grid-cols-2">
       <div class="bg-card rounded-2xl border p-6 shadow-sm">
-        <h2 class="mb-4 text-2xl font-semibold">Informazioni dirette</h2>
+        <h2 class="mb-4 text-2xl font-semibold">{contactPage?.directInfoTitle ?? 'Informazioni dirette'}</h2>
         <ul class="space-y-3 text-sm md:text-base">
           <li><strong>Telefono:</strong> {settings?.phone ?? '+39 02 1234 5678'}</li>
           <li><strong>Email:</strong> {settings?.email ?? 'booking@belhotel.com'}</li>
@@ -29,7 +29,7 @@ const settings = await getSiteSettings();
       </div>
 
       <form class="bg-card space-y-4 rounded-2xl border p-6 shadow-sm" method="post" action="#">
-        <h2 class="text-2xl font-semibold">Richiedi disponibilità</h2>
+        <h2 class="text-2xl font-semibold">{contactPage?.formTitle ?? 'Richiedi disponibilità'}</h2>
 
         <div>
           <label for="name" class="mb-1 block text-sm font-medium">Nome e cognome</label>
