@@ -81,6 +81,22 @@ export const roomsPageType = defineType({
     defineField({name: 'heroEyebrow', title: 'Hero eyebrow', type: 'string'}),
     defineField({name: 'heroTitle', title: 'Hero title', type: 'string'}),
     defineField({name: 'heroDescription', title: 'Hero description', type: 'text', rows: 3}),
+    defineField({
+      name: 'rooms',
+      title: 'Rooms to show',
+      description: 'Seleziona le camere da mostrare in questa pagina. Puoi selezionare solo documenti Room esistenti.',
+      type: 'array',
+      of: [
+        {
+          type: 'reference',
+          to: [{type: 'room'}],
+          options: {
+            disableNew: true,
+          },
+        },
+      ],
+      validation: (Rule) => Rule.unique(),
+    }),
   ],
   preview: {prepare: () => ({title: 'Rooms Page'})},
 });

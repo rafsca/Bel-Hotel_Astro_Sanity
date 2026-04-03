@@ -146,6 +146,7 @@ export type RoomsPageContent = {
   heroEyebrow?: string;
   heroTitle?: string;
   heroDescription?: string;
+  rooms?: RoomContent[];
 };
 
 export type FeaturedCard = {
@@ -323,7 +324,18 @@ const roomsPageQuery = groq`*[_type == "roomsPage" && _id == "roomsPage"][0]{
   description,
   heroEyebrow,
   heroTitle,
-  heroDescription
+  heroDescription,
+  "rooms": coalesce(rooms, [])[]->{
+    _id,
+    "title": coalesce(title, name),
+    "slug": coalesce(slug.current, slug),
+    "excerpt": coalesce(excerpt, shortDescription, description),
+    price,
+    capacity,
+    image,
+    "imageAlt": coalesce(image.alt, title),
+    "amenities": amenities[]->title
+  }
 }`;
 
 const experiencesPageQuery = groq`*[_type == "experiencesPage" && _id == "experiencesPage"][0]{

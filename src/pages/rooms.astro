@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { getRooms, getRoomsPageContent, isSanityConfigured, urlFor } from '@/lib/cms';
 
 const [sanityRooms, roomsPage] = await Promise.all([getRooms(12), getRoomsPageContent()]);
+const pageRooms = roomsPage?.rooms?.length ? roomsPage.rooms : sanityRooms;
 
 const fallbackRooms = [
   {
@@ -57,9 +58,9 @@ const fallbackRoomImages = [Room1, Room2, Room3, Room4];
 
   <section class="pb-20">
     <div class="container">
-      {sanityRooms.length > 0 ? (
+      {pageRooms.length > 0 ? (
         <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {sanityRooms.map((room, index) => (
+          {pageRooms.map((room, index) => (
             <article class="bg-card overflow-hidden rounded-2xl border shadow-sm">
               {room.image && urlFor(room.image)?.width(900).height(560).url() ? (
                 <img
