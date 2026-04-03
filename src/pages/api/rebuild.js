@@ -1,4 +1,17 @@
-const ALLOWED_TYPES = new Set(['siteSettings', 'homepage', 'room', 'amenity']);
+const ALLOWED_TYPES = new Set([
+  'siteSettings',
+  'navigationSettings',
+  'homepage',
+  'aboutPage',
+  'contactPage',
+  'roomsPage',
+  'customTravelPage',
+  'experiencesPage',
+  'toursPage',
+  'projectsPage',
+  'room',
+  'amenity',
+]);
 const recentTransactions = new Map();
 
 function seenRecently(transactionId) {

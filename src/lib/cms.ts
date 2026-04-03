@@ -148,6 +148,27 @@ export type RoomsPageContent = {
   heroDescription?: string;
 };
 
+export type FeaturedCard = {
+  title?: string;
+  description?: string;
+  image?: unknown;
+  imageAlt?: string;
+};
+
+export type StandardContentPage = {
+  title?: string;
+  description?: string;
+  heroEyebrow?: string;
+  heroTitle?: string;
+  heroDescription?: string;
+  sectionTitle?: string;
+  cards?: FeaturedCard[];
+};
+
+export type ExperiencesPageContent = StandardContentPage;
+export type ToursPageContent = StandardContentPage;
+export type ProjectsPageContent = StandardContentPage;
+
 const projectId = import.meta.env.PUBLIC_SANITY_PROJECT_ID;
 const dataset = import.meta.env.PUBLIC_SANITY_DATASET;
 const apiVersion = import.meta.env.PUBLIC_SANITY_API_VERSION || '2026-03-24';
@@ -184,7 +205,7 @@ async function safeFetch<T>(query: string, params: Record<string, unknown> = {})
   }
 }
 
-const siteSettingsQuery = groq`*[_type == "siteSettings"][0]{
+const siteSettingsQuery = groq`*[_type == "siteSettings" && _id == "siteSettings"][0]{
   "title": coalesce(title, hotelName, "BEL Hotel"),
   "description": coalesce(description, "Esperienza di lusso e comfort nel cuore della città."),
   "tagline": coalesce(tagline, "Luxury & Comfort, Every Stay"),
@@ -193,7 +214,7 @@ const siteSettingsQuery = groq`*[_type == "siteSettings"][0]{
   email
 }`;
 
-const homepageQuery = groq`*[_type == "homepage"][0]{
+const homepageQuery = groq`*[_type == "homepage" && _id == "homepage"][0]{
   heroTitle,
   heroSubtitle,
   heroCtaLabel,
@@ -208,7 +229,7 @@ const homepageQuery = groq`*[_type == "homepage"][0]{
   featuredRoomsCtaHref
 }`;
 
-const navigationSettingsQuery = groq`*[_type == "navigationSettings"][0]{
+const navigationSettingsQuery = groq`*[_type == "navigationSettings" && _id == "navigationSettings"][0]{
   "logoPrimary": coalesce(logoPrimary, "BEL"),
   "logoSecondary": coalesce(logoSecondary, "HOTEL"),
   "menuItems": coalesce(menuItems, [])[]{
@@ -233,7 +254,7 @@ const roomsQuery = groq`*[_type == "room"] | order(_createdAt desc) [0...$limit]
   "amenities": amenities[]->title
 }`;
 
-const customTravelPageQuery = groq`*[_type == "customTravelPage"][0]{
+const customTravelPageQuery = groq`*[_type == "customTravelPage" && _id == "customTravelPage"][0]{
   title,
   seoTitle,
   seoDescription,
@@ -271,7 +292,7 @@ const customTravelPageQuery = groq`*[_type == "customTravelPage"][0]{
   }
 }`;
 
-const aboutPageQuery = groq`*[_type == "aboutPage"][0]{
+const aboutPageQuery = groq`*[_type == "aboutPage" && _id == "aboutPage"][0]{
   title,
   description,
   heroEyebrow,
@@ -287,7 +308,7 @@ const aboutPageQuery = groq`*[_type == "aboutPage"][0]{
   qualityDescription
 }`;
 
-const contactPageQuery = groq`*[_type == "contactPage"][0]{
+const contactPageQuery = groq`*[_type == "contactPage" && _id == "contactPage"][0]{
   title,
   description,
   heroEyebrow,
@@ -297,12 +318,57 @@ const contactPageQuery = groq`*[_type == "contactPage"][0]{
   formTitle
 }`;
 
-const roomsPageQuery = groq`*[_type == "roomsPage"][0]{
+const roomsPageQuery = groq`*[_type == "roomsPage" && _id == "roomsPage"][0]{
   title,
   description,
   heroEyebrow,
   heroTitle,
   heroDescription
+}`;
+
+const experiencesPageQuery = groq`*[_type == "experiencesPage" && _id == "experiencesPage"][0]{
+  title,
+  description,
+  heroEyebrow,
+  heroTitle,
+  heroDescription,
+  sectionTitle,
+  "cards": coalesce(cards, [])[]{
+    title,
+    description,
+    image,
+    "imageAlt": coalesce(image.alt, title)
+  }
+}`;
+
+const toursPageQuery = groq`*[_type == "toursPage" && _id == "toursPage"][0]{
+  title,
+  description,
+  heroEyebrow,
+  heroTitle,
+  heroDescription,
+  sectionTitle,
+  "cards": coalesce(cards, [])[]{
+    title,
+    description,
+    image,
+    "imageAlt": coalesce(image.alt, title)
+  }
+}`;
+
+const projectsPageQuery = groq`*[_type == "projectsPage" && _id == "projectsPage"][0]{
+  title,
+  description,
+  heroEyebrow,
+  heroTitle,
+  heroDescription,
+  sectionTitle,
+  "cards": coalesce(cards, [])[]{
+    title,
+    description,
+    image,
+    "imageAlt": coalesce(image.alt, title)
+  }
 }`;
 
 export async function getSiteSettings(): Promise<SiteSettings | null> {
@@ -336,4 +402,16 @@ export async function getContactPageContent(): Promise<ContactPageContent | null
 
 export async function getRoomsPageContent(): Promise<RoomsPageContent | null> {
   return safeFetch<RoomsPageContent>(roomsPageQuery);
+}
+
+export async function getExperiencesPageContent(): Promise<ExperiencesPageContent | null> {
+  return safeFetch<ExperiencesPageContent>(experiencesPageQuery);
+}
+
+export async function getToursPageContent(): Promise<ToursPageContent | null> {
+  return safeFetch<ToursPageContent>(toursPageQuery);
+}
+
+export async function getProjectsPageContent(): Promise<ProjectsPageContent | null> {
+  return safeFetch<ProjectsPageContent>(projectsPageQuery);
 }

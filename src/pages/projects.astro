@@ -1,0 +1,74 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { Image } from 'astro:assets';
+import Dining from '@/assets/dining.jpeg';
+import Room3 from '@/assets/hotel_room3.jpeg';
+import Room4 from '@/assets/hotel_room4.jpeg';
+import { Button } from '@/components/ui/button';
+import { getProjectsPageContent, isSanityConfigured, urlFor, type FeaturedCard } from '@/lib/cms';
+
+const page = await getProjectsPageContent();
+
+const fallbackCards: FeaturedCard[] = [
+  {
+    title: 'Sustainability Program',
+    description: 'Iniziative dedicate alla riduzione dell’impatto ambientale della struttura.',
+  },
+  {
+    title: 'Local Partnerships',
+    description: 'Collaborazioni con realtà locali per esperienze più autentiche.',
+  },
+  {
+    title: 'Guest Experience Lab',
+    description: 'Progetti di innovazione continua per migliorare servizi e comfort.',
+  },
+];
+
+const cards: FeaturedCard[] = page?.cards?.length ? page.cards : fallbackCards;
+const fallbackAssets = [Dining, Room3, Room4];
+---
+
+<Layout title={page?.title ?? 'Projects | BEL Hotel'} description={page?.description ?? 'Scopri i progetti e le collaborazioni BEL Hotel.'}>
+  <section class="pt-32 pb-16">
+    <div class="container">
+      <p class="text-primary mb-2 text-sm font-semibold tracking-wider uppercase">{page?.heroEyebrow ?? 'Projects'}</p>
+      <h1 class="mb-4 text-4xl font-black md:text-5xl">{page?.heroTitle ?? 'Progetti che creano valore'}</h1>
+      <p class="text-muted-foreground max-w-2xl">
+        {page?.heroDescription ?? 'Diamo forma a iniziative concrete per migliorare ospitalità, sostenibilità e impatto sul territorio.'}
+      </p>
+    </div>
+  </section>
+
+  <section class="pb-20">
+    <div class="container">
+      <h2 class="mb-8 text-2xl font-semibold md:text-3xl">{page?.sectionTitle ?? 'Progetti in primo piano'}</h2>
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {cards.map((card, index) => (
+          <article class="bg-card h-full overflow-hidden rounded-2xl border shadow-sm flex flex-col">
+            {card.image && urlFor(card.image)?.width(900).height(560).url() ? (
+              <img
+                src={urlFor(card.image)?.width(900).height(560).url()}
+                alt={card.imageAlt ?? card.title ?? 'Project'}
+                class="h-56 w-full object-cover"
+                loading="lazy"
+              />
+            ) : (
+              <Image src={fallbackAssets[index % fallbackAssets.length]} alt={card.title ?? 'Project'} class="h-56 w-full object-cover" />
+            )}
+            <div class="flex flex-1 flex-col p-5">
+              <h3 class="mb-2 text-xl font-semibold">{card.title ?? 'Progetto'}</h3>
+              <p class="text-muted-foreground mb-5">{card.description ?? 'Contenuto aggiornabile da Sanity Studio.'}</p>
+              <Button asChild variant="outline" className="mt-auto w-full">
+                <a href="/contact">Scopri di più</a>
+              </Button>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      {!isSanityConfigured && (
+        <p class="text-muted-foreground mt-6 text-sm">Per usare contenuti reali da CMS configura le variabili Sanity nel progetto.</p>
+      )}
+    </div>
+  </section>
+</Layout>

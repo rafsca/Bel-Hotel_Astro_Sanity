@@ -23,6 +23,15 @@ export const deskStructure: StructureResolver = (S) =>
         .title('Rooms Page')
         .child(S.document().schemaType('roomsPage').documentId('roomsPage')),
       S.listItem()
+        .title('Experiences Page')
+        .child(S.document().schemaType('experiencesPage').documentId('experiencesPage')),
+      S.listItem()
+        .title('Tours Page')
+        .child(S.document().schemaType('toursPage').documentId('toursPage')),
+      S.listItem()
+        .title('Projects Page')
+        .child(S.document().schemaType('projectsPage').documentId('projectsPage')),
+      S.listItem()
         .title('Custom Travel Page')
         .child(S.document().schemaType('customTravelPage').documentId('customTravelPage')),
       S.divider(),

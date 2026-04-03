@@ -2,6 +2,7 @@ import { Menu, X } from "lucide-react"
 import Navbar from "./Navbar"
 import { useEffect, useState } from "react"
 import type { NavigationSettings } from "@/lib/cms"
+import { ModeToggle } from "./ModeToggle"
 
 type HeaderProps = {
     navigation?: NavigationSettings | null
@@ -51,6 +52,7 @@ const Header = ({ navigation }: HeaderProps) => {
         <Navbar isOpen={isClicked} toggleNavClick={toggleNavClick} navigation={navigation} />
 
         <div className="flex items-center gap-4 justify-start">
+            <ModeToggle />
             {/* Menu Button */}
             <button
                 type="button"

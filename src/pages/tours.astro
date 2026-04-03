@@ -1,0 +1,74 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import { Image } from 'astro:assets';
+import HotelBg from '@/assets/hotel_bg.jpeg';
+import Room2 from '@/assets/hotel_room2.jpeg';
+import Room3 from '@/assets/hotel_room3.jpeg';
+import { Button } from '@/components/ui/button';
+import { getToursPageContent, isSanityConfigured, urlFor, type FeaturedCard } from '@/lib/cms';
+
+const page = await getToursPageContent();
+
+const fallbackCards: FeaturedCard[] = [
+  {
+    title: 'City Essentials',
+    description: 'I luoghi simbolo della città con guida e itinerario ottimizzato.',
+  },
+  {
+    title: 'Nature Escape',
+    description: 'Escursioni e percorsi panoramici tra natura e relax.',
+  },
+  {
+    title: 'Signature Tour',
+    description: 'Esperienze premium con servizi dedicati e comfort superiore.',
+  },
+];
+
+const cards: FeaturedCard[] = page?.cards?.length ? page.cards : fallbackCards;
+const fallbackAssets = [HotelBg, Room2, Room3];
+---
+
+<Layout title={page?.title ?? 'Tours | BEL Hotel'} description={page?.description ?? 'Organizza tour su misura durante il tuo soggiorno.'}>
+  <section class="pt-32 pb-16">
+    <div class="container">
+      <p class="text-primary mb-2 text-sm font-semibold tracking-wider uppercase">{page?.heroEyebrow ?? 'Tours'}</p>
+      <h1 class="mb-4 text-4xl font-black md:text-5xl">{page?.heroTitle ?? 'Tour personalizzati per ogni esigenza'}</h1>
+      <p class="text-muted-foreground max-w-2xl">
+        {page?.heroDescription ?? 'Dalle visite guidate alle escursioni private: costruiamo tour flessibili e curati nei dettagli.'}
+      </p>
+    </div>
+  </section>
+
+  <section class="pb-20">
+    <div class="container">
+      <h2 class="mb-8 text-2xl font-semibold md:text-3xl">{page?.sectionTitle ?? 'Tour disponibili'}</h2>
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {cards.map((card, index) => (
+          <article class="bg-card h-full overflow-hidden rounded-2xl border shadow-sm flex flex-col">
+            {card.image && urlFor(card.image)?.width(900).height(560).url() ? (
+              <img
+                src={urlFor(card.image)?.width(900).height(560).url()}
+                alt={card.imageAlt ?? card.title ?? 'Tour'}
+                class="h-56 w-full object-cover"
+                loading="lazy"
+              />
+            ) : (
+              <Image src={fallbackAssets[index % fallbackAssets.length]} alt={card.title ?? 'Tour'} class="h-56 w-full object-cover" />
+            )}
+            <div class="flex flex-1 flex-col p-5">
+              <h3 class="mb-2 text-xl font-semibold">{card.title ?? 'Tour'}</h3>
+              <p class="text-muted-foreground mb-5">{card.description ?? 'Contenuto aggiornabile da Sanity Studio.'}</p>
+              <Button asChild variant="outline" className="mt-auto w-full">
+                <a href="/contact">Prenota il tour</a>
+              </Button>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      {!isSanityConfigured && (
+        <p class="text-muted-foreground mt-6 text-sm">Per usare contenuti reali da CMS configura le variabili Sanity nel progetto.</p>
+      )}
+    </div>
+  </section>
+</Layout>

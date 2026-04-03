@@ -8,7 +8,14 @@ import {
 } from './customTravelPage';
 import {homepageType} from './homepage';
 import {navigationSettingsType} from './navigationSettings';
-import {aboutPageType, contactPageType, roomsPageType} from './pagesContent';
+import {
+	aboutPageType,
+	contactPageType,
+	experiencesPageType,
+	projectsPageType,
+	roomsPageType,
+	toursPageType,
+} from './pagesContent';
 import {roomType} from './room';
 import {siteSettingsType} from './siteSettings';
 
@@ -19,6 +26,9 @@ export const schemaTypes = [
 	aboutPageType,
 	contactPageType,
 	roomsPageType,
+	experiencesPageType,
+	toursPageType,
+	projectsPageType,
 	amenityType,
 	roomType,
 	pageIntroSectionType,
