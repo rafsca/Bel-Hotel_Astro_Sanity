@@ -17,7 +17,7 @@ const dataset =
 
 // https://astro.build/config
 export default defineConfig({
-    output: 'hybrid',
+    output: 'server',
     adapter: vercel(),
     integrations: [react(),  sanityIntegration({
             projectId,
