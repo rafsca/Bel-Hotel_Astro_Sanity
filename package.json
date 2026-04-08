@@ -21,6 +21,7 @@
     "@fontsource-variable/geist": "^5.2.8",
     "@fontsource/poppins": "^5.2.7",
     "@fontsource/twinkle-star": "^5.2.8",
+    "@sanity/astro": "^3.3.1",
     "@sanity/client": "^7.20.0",
     "@sanity/image-url": "^2.0.3",
     "@sanity/vision": "^3.99.0",
